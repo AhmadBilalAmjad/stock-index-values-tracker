@@ -14,6 +14,8 @@ export interface CreateAlertData {
   symbol: string;
   condition: 'above' | 'below';
   value: number;
+  email: string;
+  userId: string;
 }
 
 export interface StockQuote {
@@ -50,7 +52,7 @@ const api = axios.create({
 
 // Add request interceptor for authentication
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -79,17 +81,58 @@ api.interceptors.response.use(
 
 // Alert API functions
 export const createAlert = async (data: CreateAlertData): Promise<Alert> => {
-  const response = await api.post('/alerts', data);
-  return response.data;
+  // Get token from localStorage
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    throw new Error('Authentication required. Please log in.');
+  }
+
+  const response = await api.post('/alerts', {
+    symbol: data.symbol,
+    threshold: data.value,
+    direction: data.condition,
+    email: data.email,
+    userId: data.userId
+  }, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  return response.data.data;
 };
 
 export const getAlerts = async (): Promise<Alert[]> => {
-  const response = await api.get('/alerts');
-  return response.data;
+  // Get token from localStorage
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    throw new Error('Authentication required. Please log in.');
+  }
+
+  const response = await api.get('/alerts', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  return response.data.data;
 };
 
 export const deleteAlert = async (alertId: string): Promise<void> => {
-  await api.delete(`/alerts/${alertId}`);
+  // Get token from localStorage
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    throw new Error('Authentication required. Please log in.');
+  }
+
+  await api.delete(`/alerts/${alertId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
 };
 
 // Stock API functions

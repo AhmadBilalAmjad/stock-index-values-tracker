@@ -13,7 +13,7 @@ setAlerts(alerts);
 router.get('/', (req, res) => {
   // In a real app, we would authenticate the user and get their ID
   // For demo, we'll use a placeholder userId
-  const userId = req.query.userId || 'demo-user';
+  const userId = req.query.userId || 'demo-user@gmail.com';
 
   const userAlerts = alerts.filter(alert => alert.userId === userId);
   res.json({ success: true, data: userAlerts });

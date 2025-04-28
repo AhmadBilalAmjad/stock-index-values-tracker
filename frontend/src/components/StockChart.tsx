@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import AlertModal from './AlertModal';
 
 // Register Chart.js components
 Chart.register(...registerables);
@@ -25,6 +26,7 @@ interface StockChartProps {
 export default function StockChart({ data }: StockChartProps) {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -129,67 +131,90 @@ export default function StockChart({ data }: StockChartProps) {
     };
   }, [data]);
 
+  const handleSetAlert = () => {
+    setIsAlertModalOpen(true);
+  };
+
   return (
-    <div className="bg-white overflow-hidden shadow rounded-lg h-full">
-      <div className="px-4 py-5 sm:p-6">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium text-gray-900 truncate">
-            {data.name || data.symbol}
-          </h3>
-          <span className="text-sm text-gray-500">{data.displaySymbol || data.symbol}</span>
-        </div>
-
-        <div className="mt-4">
-          <div className="text-3xl font-bold text-gray-900">
-            ${data.currentPrice.toFixed(2)}
+    <>
+      <div className="bg-white overflow-hidden shadow rounded-lg h-full">
+        <div className="px-4 py-5 sm:p-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-medium text-gray-900 truncate">
+              {data.name || data.symbol}
+            </h3>
+            <span className="text-sm text-gray-500">{data.displaySymbol || data.symbol}</span>
           </div>
-          <div className={`mt-1 text-sm ${data.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-            {data.change >= 0 ? '+' : ''}${data.change.toFixed(2)} ({data.change >= 0 ? '+' : ''}{data.percentChange})
-          </div>
-        </div>
 
-        <div className="mt-6 h-64">
-          <canvas ref={chartRef}></canvas>
-        </div>
-
-        <div className="mt-4 grid grid-cols-2 gap-4">
-          {data.openPrice && (
-            <div>
-              <p className="text-sm font-medium text-gray-500">Open</p>
-              <p className="mt-1 text-sm text-gray-900">${data.openPrice?.toFixed(2) || 'N/A'}</p>
-            </div>
-          )}
-
-          {data.highPrice && (
-            <div>
-              <p className="text-sm font-medium text-gray-500">High</p>
-              <p className="mt-1 text-sm text-gray-900">${data.highPrice?.toFixed(2) || 'N/A'}</p>
-            </div>
-          )}
-
-          {data.lowPrice && (
-            <div>
-              <p className="text-sm font-medium text-gray-500">Low</p>
-              <p className="mt-1 text-sm text-gray-900">${data.lowPrice?.toFixed(2) || 'N/A'}</p>
-            </div>
-          )}
-
-          {data.previousClose && (
-            <div>
-              <p className="text-sm font-medium text-gray-500">Previous Close</p>
-              <p className="mt-1 text-sm text-gray-900">${data.previousClose.toFixed(2)}</p>
-            </div>
-          )}
-        </div>
-
-        {data.market && (
           <div className="mt-4">
-            <p className="text-xs text-gray-500">
-              Market: {data.market}
-            </p>
+            <div className="text-3xl font-bold text-gray-900">
+              ${data.currentPrice.toFixed(2)}
+            </div>
+            <div className={`mt-1 text-sm ${data.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              {data.change >= 0 ? '+' : ''}${data.change.toFixed(2)} ({data.change >= 0 ? '+' : ''}{data.percentChange})
+            </div>
           </div>
-        )}
+
+          <div className="mt-6 h-64">
+            <canvas ref={chartRef}></canvas>
+          </div>
+
+          <div className="mt-4 grid grid-cols-2 gap-4">
+            {data.openPrice && (
+              <div>
+                <p className="text-sm font-medium text-gray-500">Open</p>
+                <p className="mt-1 text-sm text-gray-900">${data.openPrice?.toFixed(2) || 'N/A'}</p>
+              </div>
+            )}
+
+            {data.highPrice && (
+              <div>
+                <p className="text-sm font-medium text-gray-500">High</p>
+                <p className="mt-1 text-sm text-gray-900">${data.highPrice?.toFixed(2) || 'N/A'}</p>
+              </div>
+            )}
+
+            {data.lowPrice && (
+              <div>
+                <p className="text-sm font-medium text-gray-500">Low</p>
+                <p className="mt-1 text-sm text-gray-900">${data.lowPrice?.toFixed(2) || 'N/A'}</p>
+              </div>
+            )}
+
+            {data.previousClose && (
+              <div>
+                <p className="text-sm font-medium text-gray-500">Previous Close</p>
+                <p className="mt-1 text-sm text-gray-900">${data.previousClose.toFixed(2)}</p>
+              </div>
+            )}
+          </div>
+
+          {data.market && (
+            <div className="mt-4">
+              <p className="text-xs text-gray-500">
+                Market: {data.market}
+              </p>
+            </div>
+          )}
+
+          <div className="mt-4">
+            <button
+              type="button"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+              onClick={handleSetAlert}
+            >
+              Set Alert
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
+
+      <AlertModal
+        isOpen={isAlertModalOpen}
+        onClose={() => setIsAlertModalOpen(false)}
+        symbol={data.symbol}
+        currentPrice={data.currentPrice}
+      />
+    </>
   );
 } 
