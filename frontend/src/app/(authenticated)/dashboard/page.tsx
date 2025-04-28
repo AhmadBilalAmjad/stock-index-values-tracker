@@ -15,7 +15,7 @@ export default function Dashboard() {
   const [searchResult, setSearchResult] = useState<StockQuote | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState('');
-  const [viewMode, setViewMode] = useState<'card' | 'chart'>('card');
+  const [viewMode, setViewMode] = useState<'card' | 'chart'>('chart');
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -136,13 +136,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Search Result */}
-        {searchResult && (
-          <div className="mb-8">
-            <StockCard data={searchResult} />
-          </div>
-        )}
-
         {error && (
           <div className="mb-4 rounded-md bg-red-50 p-4">
             <div className="flex">
@@ -182,6 +175,17 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
+
+        {/* Search Result */}
+        {searchResult && (
+          <div className="mb-8">
+            {viewMode === 'card' ? (
+              <StockCard data={searchResult} />
+            ) : (
+              <StockChart data={searchResult} />
+            )}
+          </div>
+        )}
 
         {isLoading ? (
           <div className="flex items-center justify-center h-64">
