@@ -92,8 +92,8 @@ export const getStockIndices = async (): Promise<StockQuote> => {
   return response.data;
 };
 
-export const getStockHistory = async (symbol: string, days = 30) => {
-  const response = await api.get(`/stocks/${symbol}/history?days=${days}`);
+export const getStockHistory = async (symbol: string) => {
+  const response = await api.get(`/stocks/candles/${symbol}`);
   return response.data;
 };
 
