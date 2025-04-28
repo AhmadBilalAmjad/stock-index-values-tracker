@@ -1,10 +1,20 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const axios = require('axios');
+
+// Import routes
+const stockRoutes = require('./routes/stockRoutes');
+const alertRoutes = require('./routes/alertRoutes');
+
+// Import Firebase utilities
+const { initializeFirebase } = require('./utils/firebase');
+const { authenticate } = require('./middlewares/auth');
 
 // Load environment variables
 dotenv.config();
+
+// Initialize Firebase
+initializeFirebase();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,6 +32,10 @@ app.get('/', (req, res) => {
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date() });
 });
+
+// Register route handlers
+app.use('/api/stocks', stockRoutes);
+app.use('/api/alerts', authenticate, alertRoutes); // Protected route
 
 // Start server
 app.listen(PORT, () => {
