@@ -10,6 +10,9 @@ const alertRoutes = require('./routes/alertRoutes');
 const { initializeFirebase } = require('./utils/firebase');
 const { authenticate } = require('./middlewares/auth');
 
+// Import alert cron utility
+const { startAlertCron } = require('./utils/alertCron');
+
 // Load environment variables
 dotenv.config();
 
@@ -40,4 +43,7 @@ app.use('/api/alerts', authenticate, alertRoutes); // Protected route
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+
+  // Start the alert cron job
+  startAlertCron();
 }); 

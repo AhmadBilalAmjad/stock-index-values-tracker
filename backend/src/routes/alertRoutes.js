@@ -1,9 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const { setAlerts, getAlerts } = require('../utils/alertCron');
 
 // Store alerts in memory for demo purposes
 // In a real app, these would be stored in a database
 let alerts = [];
+
+// Initialize alerts in the cron utility
+setAlerts(alerts);
 
 // Get all alerts for a user
 router.get('/', (req, res) => {
@@ -47,6 +51,9 @@ router.post('/', (req, res) => {
 
   alerts.push(newAlert);
 
+  // Update alerts in the cron utility
+  setAlerts(alerts);
+
   res.status(201).json({ success: true, data: newAlert });
 });
 
@@ -63,6 +70,9 @@ router.delete('/:id', (req, res) => {
 
   alerts.splice(alertIndex, 1);
 
+  // Update alerts in the cron utility
+  setAlerts(alerts);
+
   res.json({ success: true, message: 'Alert deleted successfully' });
 });
 
@@ -78,6 +88,9 @@ router.patch('/:id/toggle', (req, res) => {
   }
 
   alert.active = !alert.active;
+
+  // Update alerts in the cron utility
+  setAlerts(alerts);
 
   res.json({ success: true, data: alert });
 });
