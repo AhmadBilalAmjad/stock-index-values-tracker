@@ -34,7 +34,7 @@ export default function Register() {
 
     try {
       await register(email, password);
-      router.push('/');
+      router.push('/dashboard');
     } catch (err) {
       setError('Failed to create account. Please try again.');
     } finally {
