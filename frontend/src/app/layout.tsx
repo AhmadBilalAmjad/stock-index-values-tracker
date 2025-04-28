@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className} data-new-gr-c-s-check-loaded="14.1233.0" data-gr-ext-installed="">
         <AuthProvider>
           {children}
         </AuthProvider>

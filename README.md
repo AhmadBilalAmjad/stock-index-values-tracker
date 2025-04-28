@@ -61,7 +61,7 @@ A web application for tracking stock index values and setting up price alerts.
 
 ## Email Alerts
 
-The application includes a cron job that checks stock prices every 5 minutes and sends email alerts when price thresholds are crossed.
+The application includes a cron job that checks stock prices every minute and sends email alerts when price thresholds are crossed.
 
 ### SMTP Configuration
 

@@ -70,7 +70,7 @@ const startAlertCron = () => {
     await processAlerts();
   });
 
-  console.log('Alert cron job started - checking every 5 minutes');
+  console.log('Alert cron job started - checking every minute');
 };
 
 module.exports = {
