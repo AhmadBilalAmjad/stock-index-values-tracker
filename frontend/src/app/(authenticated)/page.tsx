@@ -1,6 +1,13 @@
 'use client';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+  const router = useRouter();
+  useEffect(() => {
+    router.push('/dashboard');
+  }, [router]);
+
   return (
     <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div className="px-4 py-6 sm:px-0">
