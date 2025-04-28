@@ -27,6 +27,13 @@ export interface StockQuote {
   percentChange: string;
 }
 
+export interface ApiStats {
+  totalRequests: number;
+  requestsToday: number;
+  remainingQuota: number;
+  planLimit: number;
+}
+
 // API base URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
 
@@ -103,9 +110,9 @@ export const getStockHistory = async (symbol: string) => {
   return response.data;
 };
 
-export const getApiUsage = async () => {
+export const getApiUsage = async (): Promise<ApiStats> => {
   const response = await api.get('/stocks/stats');
-  return response.data;
+  return response.data.data;
 };
 
 export default api; 
