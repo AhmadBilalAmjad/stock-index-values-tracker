@@ -1,23 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useAuth } from '@/lib/AuthContext';
 import { useRouter } from 'next/navigation';
 import { getStockIndices } from '@/lib/api';
 import { StockQuote } from '@/lib/api';
 
 export default function Dashboard() {
-  const { user, loading } = useAuth();
   const router = useRouter();
   const [stockData, setStockData] = useState<StockQuote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-  }, [user, loading, router]);
 
   useEffect(() => {
     const fetchStockData = async () => {
@@ -35,15 +27,13 @@ export default function Dashboard() {
       }
     };
 
-    if (user) {
-      fetchStockData();
+    fetchStockData();
 
-      // Set up polling to refresh data every 60 seconds
-      const interval = setInterval(fetchStockData, 60000);
+    // Set up polling to refresh data every 60 seconds
+    const interval = setInterval(fetchStockData, 60000);
 
-      return () => clearInterval(interval);
-    }
-  }, [user]);
+    return () => clearInterval(interval);
+  }, []);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -54,19 +44,8 @@ export default function Dashboard() {
     }).format(price);
   };
 
-  if (loading || !user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-100">
+    <>
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-gray-900">Stock Indices Dashboard</h1>
@@ -142,6 +121,6 @@ export default function Dashboard() {
           </div>
         )}
       </main>
-    </div>
+    </>
   );
 } 
