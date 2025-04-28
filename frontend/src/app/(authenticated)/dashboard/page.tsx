@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getStockIndices, getStockQuote, StockQuote } from '@/lib/api';
 import StockChart from '@/components/StockChart';
 import StockCard from '@/components/StockCard';
+import Link from 'next/link';
 
 export default function Dashboard() {
   const [stockData, setStockData] = useState<StockQuote[]>([]);
@@ -66,10 +67,23 @@ export default function Dashboard() {
     <>
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">Stock Indices Dashboard</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Track the performance of major stock indices in real-time
-          </p>
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Stock Indices Dashboard</h1>
+              <p className="mt-1 text-sm text-gray-500">
+                Track the performance of major stock indices in real-time
+              </p>
+            </div>
+            <Link
+              href="/alerts"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+              </svg>
+              View Alerts
+            </Link>
+          </div>
         </div>
       </header>
 

@@ -47,7 +47,7 @@ export default function AlertModal({ isOpen, onClose, symbol, currentPrice }: Al
       setSuccess(true);
       setTimeout(() => {
         onClose();
-      }, 2000);
+      }, 3000);
     } catch (err: any) {
       console.error('Error creating alert:', err);
 

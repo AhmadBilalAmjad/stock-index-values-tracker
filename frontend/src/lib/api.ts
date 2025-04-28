@@ -3,11 +3,13 @@ import axios from 'axios';
 // Interfaces
 export interface Alert {
   id: string;
-  symbol: string;
-  condition: 'above' | 'below';
-  value: number;
-  createdAt: string;
   userId: string;
+  symbol: string;
+  threshold: number;
+  direction: string;
+  email: string;
+  createdAt: string;
+  active: boolean;
 }
 
 export interface CreateAlertData {
@@ -103,7 +105,7 @@ export const createAlert = async (data: CreateAlertData): Promise<Alert> => {
   return response.data.data;
 };
 
-export const getAlerts = async (): Promise<Alert[]> => {
+export const getAlerts = async (userId: string): Promise<Alert[]> => {
   // Get token from localStorage
   const token = localStorage.getItem('token');
 
@@ -111,7 +113,7 @@ export const getAlerts = async (): Promise<Alert[]> => {
     throw new Error('Authentication required. Please log in.');
   }
 
-  const response = await api.get('/alerts', {
+  const response = await api.get(`/alerts?userId=${userId}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }

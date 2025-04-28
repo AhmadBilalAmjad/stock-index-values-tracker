@@ -60,9 +60,8 @@ router.post('/', (req, res) => {
 // Delete an alert
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
-  const userId = req.query.userId || 'demo-user';
 
-  const alertIndex = alerts.findIndex(alert => alert.id === id && alert.userId === userId);
+  const alertIndex = alerts.findIndex(alert => alert.id === id);
 
   if (alertIndex === -1) {
     return res.status(404).json({ success: false, error: 'Alert not found' });
