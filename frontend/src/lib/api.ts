@@ -104,13 +104,7 @@ export const getStockIndices = async (): Promise<StockQuote[]> => {
     return response.data.data;
   }
 
-
   return [];
-};
-
-export const getStockHistory = async (symbol: string) => {
-  const response = await api.get(`/stocks/candles/${symbol}`);
-  return response.data;
 };
 
 export const getApiUsage = async (): Promise<ApiStats> => {

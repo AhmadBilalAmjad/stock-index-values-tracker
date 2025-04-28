@@ -1,13 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { getStockIndices, getStockQuote, StockQuote } from '@/lib/api';
 import StockChart from '@/components/StockChart';
 import StockCard from '@/components/StockCard';
 
 export default function Dashboard() {
-  const router = useRouter();
   const [stockData, setStockData] = useState<StockQuote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');

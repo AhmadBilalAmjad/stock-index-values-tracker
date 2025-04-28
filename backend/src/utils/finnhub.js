@@ -75,25 +75,6 @@ const getStockQuote = (symbol) => {
   });
 };
 
-// Get stock candles (historical data) for a symbol
-const getStockCandles = (symbol, resolution, from, to) => {
-  return new Promise((resolve, reject) => {
-    if (!finnhubClient) {
-      // Return mock data if no API key
-      return resolve(getMockCandles(symbol, from, to));
-    }
-
-    incrementUsage();
-    finnhubClient.stockCandles(symbol, resolution, from, to, (error, data, response) => {
-      if (error) {
-        console.error(`Error fetching candles for ${symbol}:`, error);
-        return resolve(getMockCandles(symbol, from, to));
-      }
-      resolve(data);
-    });
-  });
-};
-
 // Generate mock quote data for testing
 const getMockQuote = (symbol) => {
   const basePrice = getBasePriceForSymbol(symbol);
@@ -109,59 +90,32 @@ const getMockQuote = (symbol) => {
   };
 };
 
-// Generate mock candles data for testing
-const getMockCandles = (symbol, from, to) => {
-  const basePrice = getBasePriceForSymbol(symbol);
-  const timestamps = [];
-  const candles = { c: [], h: [], l: [], o: [], v: [], t: [], s: 'ok' };
-
-  // Generate data points at daily intervals
-  let current = from;
-  while (current <= to) {
-    timestamps.push(current);
-    current += 86400; // Add a day in seconds
-  }
-
-  // Generate price data for each timestamp
-  let currentPrice = basePrice;
-  timestamps.forEach(timestamp => {
-    // Random walk with slight upward bias
-    const priceDelta = (Math.random() - 0.48) * basePrice * 0.02;
-    currentPrice += priceDelta;
-
-    candles.t.push(timestamp);
-    candles.c.push(Math.round(currentPrice * 100) / 100); // Close
-    candles.h.push(Math.round((currentPrice + Math.random() * basePrice * 0.01) * 100) / 100); // High
-    candles.l.push(Math.round((currentPrice - Math.random() * basePrice * 0.01) * 100) / 100); // Low
-    candles.o.push(Math.round((currentPrice - priceDelta * 0.5) * 100) / 100); // Open
-    candles.v.push(Math.floor(Math.random() * 10000000) + 1000000); // Volume
-  });
-
-  return candles;
-};
-
 // Helper to get base price for a symbol
 const getBasePriceForSymbol = (symbol) => {
   // Set realistic base prices for common indices
   switch (symbol.toUpperCase()) {
-    case 'SPX':
-    case '^GSPC':
-      return 4500;
-    case 'IXIC':
-    case '^IXIC':
-      return 14000;
-    case 'DJI':
-    case '^DJI':
-      return 35000;
-    case 'FTSE':
-    case '^FTSE':
-      return 7500;
-    case 'DAX':
-    case '^GDAXI':
-      return 15000;
-    case 'N225':
-    case '^N225':
-      return 30000;
+    case 'AAPL':
+      return 150;
+    case 'MSFT':
+      return 250;
+    case 'GOOGL':
+      return 2800;
+    case 'AMZN':
+      return 3500;
+    case 'TSLA':
+      return 1000;
+    case 'NVDA':
+      return 200;
+    case 'TSM':
+      return 100;
+    case 'META':
+      return 300;
+    case 'NFLX':
+      return 500;
+    case 'GOOG':
+      return 2800;
+    case 'ORCL':
+      return 50;
     default:
       return 1000;
   }
@@ -169,6 +123,5 @@ const getBasePriceForSymbol = (symbol) => {
 
 module.exports = {
   getStockQuote,
-  getStockCandles,
   getApiUsage
 }; 
