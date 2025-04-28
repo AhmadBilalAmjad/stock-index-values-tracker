@@ -18,12 +18,13 @@ export interface CreateAlertData {
 
 export interface StockQuote {
   symbol: string;
+  displaySymbol: string;
+  name: string;
+  market: string;
   currentPrice: number;
-  highPrice: number;
-  lowPrice: number;
-  openPrice: number;
-  previousClosePrice: number;
-  timestamp: string;
+  previousClose: number;
+  change: number;
+  percentChange: string;
 }
 
 // API base URL
@@ -87,9 +88,14 @@ export const getStockQuote = async (symbol: string): Promise<StockQuote> => {
   return response.data;
 };
 
-export const getStockIndices = async (): Promise<StockQuote> => {
+export const getStockIndices = async (): Promise<StockQuote[]> => {
   const response = await api.get(`/stocks/indices`);
-  return response.data;
+  if (response.data?.data) {
+    return response.data.data;
+  }
+
+
+  return [];
 };
 
 export const getStockHistory = async (symbol: string) => {
